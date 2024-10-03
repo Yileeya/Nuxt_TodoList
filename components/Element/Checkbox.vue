@@ -1,12 +1,18 @@
 <script setup>
 defineProps({
     id: {
-        type: Number,
+        type: String,
         required: true,
         default: 0
     }
 });
+
 const isChecked = defineModel({ default: false });
+
+const attrs = useAttrs();
+const isDisabled = computed(() => {
+    return attrs.hasOwnProperty('disabled');
+});
 </script>
 <template>
     <div class="inline-flex items-center mt-0.5">
@@ -14,11 +20,13 @@ const isChecked = defineModel({ default: false });
             <input
                 v-model="isChecked"
                 :id="id"
+                :disabled="isDisabled"
                 type="checkbox"
                 class="peer h-6 w-6 cursor-pointer transition-all appearance-none border border-slate-200 checked:bg-primary-dark"
             />
             <span
                 class="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                :class="[{ 'cursor-not-allowed': isDisabled }]"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
