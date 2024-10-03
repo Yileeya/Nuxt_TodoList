@@ -11,7 +11,7 @@ const props = defineProps({
         })
     }
 });
-const emit = defineEmits(['textUpdate', 'deleteSuccess']);
+const emit = defineEmits(['textUpdate', 'deleteSuccess', 'updateSuccess']);
 
 const newInputValue = ref('');
 
@@ -58,6 +58,25 @@ const deleteTodo = async (id = '') => {
     }
     sending.value = false;
 };
+
+const changeCompleted = async (id = '', completed = false) => {
+    if (!id) return;
+    sending.value = true;
+    const response = await $fetch(`/api/todo/batchCompleted`, {
+        method: 'POST',
+        body: {
+            ids: [id],
+            completed: completed
+        }
+    });
+    if (response.statusCode === 200) {
+        alert(`${response.message}`);
+        emit('updateSuccess', id, { ...props.item, completed: completed });
+    } else {
+        alert('失敗');
+    }
+    sending.value = false;
+};
 </script>
 <template>
     <div
@@ -81,10 +100,20 @@ const deleteTodo = async (id = '') => {
         <template v-else>
             <ElementCheckbox :id="item._id" v-model="item.isCheck" :disabled="sending" />
             <span class="flex-1" :class="[{ 'line-through': item.completed }]">{{ item.text }}</span>
-            <ElementButton v-if="item.completed" class="p-1 bg-gray-400" :disabled="sending">
+            <ElementButton
+                v-if="item.completed"
+                class="p-1 bg-gray-400"
+                :disabled="sending"
+                @click.stop="changeCompleted(item._id, false)"
+            >
                 <SvgUnChecked />
             </ElementButton>
-            <ElementButton v-if="!item.completed" class="p-1 bg-green-600" :disabled="sending">
+            <ElementButton
+                v-if="!item.completed"
+                class="p-1 bg-green-600"
+                :disabled="sending"
+                @click.stop="changeCompleted(item._id, true)"
+            >
                 <SvgChecked />
             </ElementButton>
             <ElementButton
