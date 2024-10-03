@@ -11,7 +11,7 @@ const props = defineProps({
         })
     }
 });
-const emit = defineEmits(['textUpdate', 'deleteSuccess', 'updateSuccess']);
+const emit = defineEmits(['deleteSuccess', 'updateSuccess']);
 
 const newInputValue = ref('');
 
@@ -33,8 +33,7 @@ const updateTodoText = async () => {
     if (response.statusCode === 200) {
         alert(`${response.message}`);
         isEdit.value = false;
-        //emit 更新數據
-        emit('textUpdate', id, newInputValue.value);
+        emit('updateSuccess', id, { ...props.item, text: newInputValue.value });
     } else {
         alert('失敗');
     }
