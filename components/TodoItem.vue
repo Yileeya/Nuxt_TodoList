@@ -11,7 +11,7 @@ const props = defineProps({
         })
     }
 });
-const emit = defineEmits(['textUpdate']);
+const emit = defineEmits(['textUpdate', 'deleteSuccess']);
 
 const newInputValue = ref('');
 
@@ -40,6 +40,24 @@ const updateTodoText = async () => {
     }
     sending.value = false;
 };
+
+const deleteTodo = async (id = '') => {
+    if (!id) return;
+    sending.value = true;
+    const response = await $fetch(`/api/todo/batchDelete`, {
+        method: 'DELETE',
+        body: {
+            ids: [id]
+        }
+    });
+    if (response.statusCode === 200) {
+        alert(`${response.message}`);
+        emit('deleteSuccess', id);
+    } else {
+        alert('失敗');
+    }
+    sending.value = false;
+};
 </script>
 <template>
     <div
@@ -61,18 +79,23 @@ const updateTodoText = async () => {
             </ElementButton>
         </template>
         <template v-else>
-            <ElementCheckbox :id="item._id" v-model="item.isCheck" />
+            <ElementCheckbox :id="item._id" v-model="item.isCheck" :disabled="sending" />
             <span class="flex-1" :class="[{ 'line-through': item.completed }]">{{ item.text }}</span>
-            <ElementButton v-if="item.completed" class="p-1 bg-gray-400">
+            <ElementButton v-if="item.completed" class="p-1 bg-gray-400" :disabled="sending">
                 <SvgUnChecked />
             </ElementButton>
-            <ElementButton v-if="!item.completed" class="p-1 bg-green-600">
+            <ElementButton v-if="!item.completed" class="p-1 bg-green-600" :disabled="sending">
                 <SvgChecked />
             </ElementButton>
-            <ElementButton v-if="!item.completed" class="p-1 bg-amber-500" @click.stop="openEditMode()">
+            <ElementButton
+                v-if="!item.completed"
+                class="p-1 bg-amber-500"
+                :disabled="sending"
+                @click.stop="openEditMode()"
+            >
                 <SvgEdit />
             </ElementButton>
-            <ElementButton class="p-1 bg-rose-600">
+            <ElementButton class="p-1 bg-rose-600" :disabled="sending" @click.stop="deleteTodo(item._id)">
                 <SvgDelete />
             </ElementButton>
         </template>
