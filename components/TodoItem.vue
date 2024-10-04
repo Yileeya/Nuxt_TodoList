@@ -76,11 +76,17 @@ const changeCompleted = async (id = '', completed = false) => {
     }
     sending.value = false;
 };
+
+const checkedItem = () => {
+    if (isEdit.value || sending.value) return;
+    emit('updateSuccess', props.item._id, { ...props.item, isCheck: !props.item.isCheck });
+};
 </script>
 <template>
     <div
         class="flex bg-white p-2.5 min-h-[50px] items-center gap-2.5 my-2 cursor-default"
-        :class="[{ 'opacity-50': item.completed }]"
+        :class="[{ 'opacity-80': item.completed, 'hover:cursor-not-allowed': sending }]"
+        @click.prevent="checkedItem()"
     >
         <template v-if="isEdit">
             <ElementInput
@@ -97,7 +103,7 @@ const changeCompleted = async (id = '', completed = false) => {
             </ElementButton>
         </template>
         <template v-else>
-            <ElementCheckbox :id="item._id" v-model="item.isCheck" :disabled="sending" />
+            <ElementCheckbox :model-value="item.isCheck" :id="item._id" :disabled="sending" />
             <span class="flex-1" :class="[{ 'line-through': item.completed }]">{{ item.text }}</span>
             <ElementButton
                 v-if="item.completed"
