@@ -11,14 +11,14 @@ const isChecked = defineModel({ default: false });
 
 const attrs = useAttrs();
 const isDisabled = computed(() => {
-    return attrs.hasOwnProperty('disabled');
+    return attrs.hasOwnProperty('disabled') && attrs.disabled === true;
 });
 </script>
 <template>
-    <div class="inline-flex items-center mt-0.5">
+    <div class="inline-flex items-center mt-0.5" :class="[{ 'opacity-50': isDisabled }]">
         <label class="flex items-center cursor-pointer relative" :for="id">
             <input
-                v-model="isChecked"
+                :checked="isChecked"
                 :id="id"
                 :disabled="isDisabled"
                 type="checkbox"
