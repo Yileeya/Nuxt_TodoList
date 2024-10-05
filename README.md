@@ -54,7 +54,7 @@ Nuxt_TodoList
 - tailwindcss v3.4.13 
 
 ## 部署到Render
-- 詳細修改請檢視分支：deploy_render，[commit - render部署設定](https://github.com/Yileeya/Nuxt_TodoList/commit/7d25b6e57cdd6669759dbf1f34a33b4bd7511632)
+- 詳細修改請檢視分支：deploy_render
 - [Render官方部署教學](https://docs.render.com/deploy-nuxtjs)
 - [Render官方Github範例](https://github.com/render-examples/nuxtjs-hello-world)
 - 需注意
