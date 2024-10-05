@@ -1,7 +1,8 @@
 # Nuxt_TodoList
 
 ## 關於專案
-待辦清單todoList練習，使用 nuxt3 + tailwind + mongoose 開發。
+- 發布網址：https://nuxt-todolist.onrender.com/
+- 待辦清單todoList練習，使用 nuxt3 + tailwind + mongoose 開發。
 ![畫面](/public/demo.png)
 
 ## 開啟專案
@@ -51,6 +52,13 @@ Nuxt_TodoList
 - nuxt3 v3.13.0
 - mongoose v8.7.0
 - tailwindcss v3.4.13 
+
+## 部署到Render
+- 詳細修改請檢視分支：deploy_render，[commit - render部署設定](https://github.com/Yileeya/Nuxt_TodoList/commit/7d25b6e57cdd6669759dbf1f34a33b4bd7511632)
+- [Render官方部署教學](https://docs.render.com/deploy-nuxtjs)
+- [Render官方Github範例](https://github.com/render-examples/nuxtjs-hello-world)
+- 需注意
+  - node版本([Render可設定](https://docs.render.com/node-version))
 
 ## 參考資料
 - [D15：Nuxt 3.x Server API 整合 MongoDB 實作，邁向全端第一步](https://ithelp.ithome.com.tw/articles/10328551)
