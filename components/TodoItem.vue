@@ -1,4 +1,6 @@
 <script setup>
+import { handleErrorResponse } from '@/utils/responseHandler.js';
+
 const props = defineProps({
     item: {
         type: Object,
@@ -15,6 +17,7 @@ const emit = defineEmits(['deleteSuccess', 'updateSuccess', 'editChanged']);
 
 const newInputValue = ref('');
 
+// 編輯模式處理
 const isEdit = ref(false);
 const openEditMode = () => {
     isEdit.value = true;
@@ -27,61 +30,71 @@ const closeEditMode = () => {
 };
 
 const sending = ref(false);
+// 編輯項目
 const updateTodoText = async () => {
     const id = props.item._id;
     if (!id) return;
     sending.value = true;
-    const response = await $fetch(`/api/todo/${id}`, {
-        method: 'PUT',
-        body: { text: newInputValue.value }
-    });
-    if (response.statusCode === 200) {
-        alert(`${response.message}`);
-        isEdit.value = false;
-        emit('updateSuccess', id, { ...props.item, text: newInputValue.value });
-    } else {
-        alert('失敗');
+    try {
+        const response = await $fetch(`/api/todo/${id}`, {
+            method: 'PUT',
+            body: { text: newInputValue.value }
+        });
+        if (response.statusCode === 200) {
+            closeEditMode();
+            emit('updateSuccess', id, { ...props.item, text: newInputValue.value });
+            useNuxtApp().$toast.success(response.message);
+        }
+    } catch (err) {
+        handleErrorResponse(err);
     }
     sending.value = false;
 };
 
+// 刪除項目
 const deleteTodo = async (id = '') => {
     if (!id) return;
     sending.value = true;
-    const response = await $fetch(`/api/todo/batchDelete`, {
-        method: 'DELETE',
-        body: {
-            ids: [id]
+    try {
+        const response = await $fetch(`/api/todo/batchDelete`, {
+            method: 'DELETE',
+            body: {
+                ids: [id]
+            }
+        });
+        if (response.statusCode === 200) {
+            emit('deleteSuccess', id);
+            useNuxtApp().$toast.success(response.message);
         }
-    });
-    if (response.statusCode === 200) {
-        alert(`${response.message}`);
-        emit('deleteSuccess', id);
-    } else {
-        alert('失敗');
+    } catch (err) {
+        handleErrorResponse(err);
     }
     sending.value = false;
 };
 
+// 完成、未完成項目
 const changeCompleted = async (id = '', completed = false) => {
     if (!id) return;
     sending.value = true;
-    const response = await $fetch(`/api/todo/batchCompleted`, {
-        method: 'POST',
-        body: {
-            ids: [id],
-            completed: completed
+    try {
+        const response = await $fetch(`/api/todo/batchCompleted`, {
+            method: 'POST',
+            body: {
+                ids: [id],
+                completed: completed
+            }
+        });
+        if (response.statusCode === 200) {
+            useNuxtApp().$toast.success(response.message);
+            emit('updateSuccess', id, { ...props.item, completed: completed });
         }
-    });
-    if (response.statusCode === 200) {
-        alert(`${response.message}`);
-        emit('updateSuccess', id, { ...props.item, completed: completed });
-    } else {
-        alert('失敗');
+    } catch (err) {
+        handleErrorResponse(err);
     }
     sending.value = false;
 };
 
+// 勾選邏輯處理
 const checkedItem = () => {
     if (isEdit.value || sending.value) return;
     emit('updateSuccess', props.item._id, { ...props.item, isCheck: !props.item.isCheck });
@@ -100,7 +113,11 @@ const checkedItem = () => {
                 :disabled="sending"
                 @keydown.enter="updateTodoText()"
             />
-            <ElementButton class="p-1 bg-amber-500" :disabled="sending" @click.stop="updateTodoText()">
+            <ElementButton
+                class="p-1 bg-amber-500"
+                :disabled="!newInputValue || sending"
+                @click.stop="updateTodoText()"
+            >
                 <SvgSave />
             </ElementButton>
             <ElementButton class="p-1 bg-rose-600" :disabled="sending" @click.stop="closeEditMode()">
