@@ -64,7 +64,12 @@ const checkedIds = computed(() => {
             v-for="todo in todos"
             :key="todo._id"
             :item="todo"
-            :class="[{ 'opacity-20 pointer-events-none': isEditId && todo._id !== isEditId }]"
+            :class="[
+                {
+                    'opacity-20 pointer-events-none': isEditId && todo._id !== isEditId,
+                    'opacity-80': !isEditId && todo.completed
+                }
+            ]"
             @delete-success="todoRemove"
             @update-success="todoUpdate"
             @edit-changed="itemEdit"

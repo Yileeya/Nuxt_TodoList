@@ -103,7 +103,7 @@ const checkedItem = () => {
 <template>
     <div
         class="flex bg-white shadow p-2.5 min-h-[50px] items-center gap-2.5 my-2 rounded-sm cursor-default"
-        :class="[{ 'opacity-80': item.completed, 'hover:cursor-not-allowed': sending }]"
+        :class="[{ 'hover:cursor-not-allowed': sending }]"
         @click.prevent="checkedItem()"
     >
         <template v-if="isEdit">
