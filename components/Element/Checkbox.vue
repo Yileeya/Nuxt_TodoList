@@ -22,7 +22,7 @@ const isDisabled = computed(() => {
                 :id="id"
                 :disabled="isDisabled"
                 type="checkbox"
-                class="peer h-6 w-6 cursor-pointer transition-all appearance-none border border-slate-200 checked:bg-primary-dark"
+                class="peer h-6 w-6 cursor-pointer transition-all appearance-none rounded-sm border border-slate-200 checked:bg-primary-dark"
             />
             <span
                 class="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"

@@ -7,7 +7,7 @@ const model = defineModel({
 <template>
     <select
         v-model="model"
-        class="outline-none border border-solid border-slate-200 focus:border-primary-dark duration-100 disabled:cursor-not-allowed"
+        class="outline-none rounded border border-solid border-slate-200 focus:border-primary-dark duration-100 disabled:cursor-not-allowed"
     >
         <slot></slot>
     </select>
