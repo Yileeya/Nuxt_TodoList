@@ -16,6 +16,10 @@ export default {
                     light: '#E0FBFC',
                     DEFAULT: '#98C1D9',
                     dark: '#3D5A80'
+                },
+                vueTheme: {
+                    green: '#42d392',
+                    blue: '#647eff'
                 }
             }
         }
