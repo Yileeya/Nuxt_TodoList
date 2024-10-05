@@ -14,26 +14,24 @@ const selectValue = ref(1);
 const selectList = [
     {
         id: 1,
-        name: '刪除',
-        action: () => batchDelete()
-    },
-    {
-        id: 2,
         name: '完成',
         action: () => batchCompleted(true)
     },
     {
-        id: 3,
+        id: 2,
         name: '未完成',
         action: () => batchCompleted(false)
+    },
+    {
+        id: 3,
+        name: '刪除',
+        action: () => batchDelete()
     }
 ];
 
 const submit = async () => {
-    emit('editChanged', -1); //-1代表全部禁用
     const match = selectList.find(select => select.id === selectValue.value);
     await match.action();
-    emit('editChanged', '');
 };
 
 const batchCompleted = async (completed = true) => {
