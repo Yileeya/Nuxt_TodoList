@@ -11,9 +11,5 @@ export default defineNuxtConfig({
     },
     nitro: {
         plugins: ['@/server/index']
-    },
-    server: {
-        host: '0.0.0.0'
-    },
-    target: 'server'
+    }
 });
