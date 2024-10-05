@@ -84,7 +84,7 @@ const checkedItem = () => {
 </script>
 <template>
     <div
-        class="flex bg-white p-2.5 min-h-[50px] items-center gap-2.5 my-2 cursor-default"
+        class="flex bg-white shadow p-2.5 min-h-[50px] items-center gap-2.5 my-2 rounded-sm cursor-default"
         :class="[{ 'opacity-80': item.completed, 'hover:cursor-not-allowed': sending }]"
         @click.prevent="checkedItem()"
     >
