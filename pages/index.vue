@@ -41,14 +41,14 @@ const checkedIds = computed(() => {
 </script>
 
 <template>
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-7xl text-center">Todo List</h1>
-        <AddTodo />
+    <div class="max-w-5xl min-w-[576px] bg-white bg-opacity-70 p-5 rounded-2xl shadow-xl">
+        <h1 class="text-6xl text-center">Todo List</h1>
+        <AddTodo @add-success="fetchAllTodo()" />
         <div class="flex justify-between gap-2.5 mb-4">
             <ElementButton class="py-1.5 px-4 bg-primary-dark" @click="checkedAll(!isExitChecked)">
                 {{ isExitChecked ? '取消全選' : '全選' }}
             </ElementButton>
-            <BatchAction v-if="isExitChecked" :ids="checkedIds" @refresh="fetchAllTodo()"/>
+            <BatchAction v-if="isExitChecked" :ids="checkedIds" @refresh="fetchAllTodo()" />
         </div>
         <TodoItem
             v-for="todo in todos"
