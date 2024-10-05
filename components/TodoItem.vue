@@ -11,7 +11,7 @@ const props = defineProps({
         })
     }
 });
-const emit = defineEmits(['deleteSuccess', 'updateSuccess']);
+const emit = defineEmits(['deleteSuccess', 'updateSuccess', 'editChanged']);
 
 const newInputValue = ref('');
 
@@ -19,6 +19,11 @@ const isEdit = ref(false);
 const openEditMode = () => {
     isEdit.value = true;
     newInputValue.value = props.item?.text || '';
+    emit('editChanged', props.item._id);
+};
+const closeEditMode = () => {
+    isEdit.value = false;
+    emit('editChanged', '');
 };
 
 const sending = ref(false);
@@ -98,7 +103,7 @@ const checkedItem = () => {
             <ElementButton class="p-1 bg-amber-500" :disabled="sending" @click.stop="updateTodoText()">
                 <SvgSave />
             </ElementButton>
-            <ElementButton class="p-1 bg-rose-600" :disabled="sending" @click.stop="isEdit = false">
+            <ElementButton class="p-1 bg-rose-600" :disabled="sending" @click.stop="closeEditMode()">
                 <SvgCancel />
             </ElementButton>
         </template>
