@@ -1,4 +1,6 @@
 <script setup>
+import { handleErrorResponse } from '@/utils/responseHandler.js';
+
 const emit = defineEmits(['addSuccess']);
 
 const newTodoItem = ref('');
@@ -7,15 +9,20 @@ const sending = ref(false);
 const addTodo = async () => {
     if (!newTodoItem.value || sending.value) return;
     sending.value = true;
-    const response = await $fetch('/api/todo/add', {
-        method: 'POST',
-        body: {
-            text: newTodoItem.value
+    try {
+        const response = await $fetch('/api/todo/add', {
+            method: 'POST',
+            body: {
+                text: newTodoItem.value
+            }
+        });
+        if (response.statusCode === 200) {
+            newTodoItem.value = '';
+            emit('addSuccess');
+            useNuxtApp().$toast.success(response.message);
         }
-    });
-    if (response.statusCode === 200) {
-        newTodoItem.value = '';
-        emit('addSuccess');
+    } catch (err) {
+        handleErrorResponse(err);
     }
     sending.value = false;
 };
