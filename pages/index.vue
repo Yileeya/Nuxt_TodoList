@@ -51,8 +51,8 @@ const checkedIds = computed(() => {
 </script>
 
 <template>
-    <div class="max-w-5xl min-w-[576px] bg-white bg-opacity-70 p-5 rounded-2xl shadow-xl">
-        <h1 class="text-6xl text-center">Todo List</h1>
+    <div class="max-w-5xl min-w-full md:min-w-[576px] bg-white bg-opacity-70 p-5 rounded-2xl shadow-xl">
+        <h1 class="text-5xl md:text-6xl text-center">Todo List</h1>
         <AddTodo :class="[{ 'opacity-20 pointer-events-none': isEditId }]" @add-success="fetchAllTodo()" />
         <div v-show="todos.length && !isEditId" class="flex justify-between gap-2.5 mb-4">
             <ElementButton class="py-1.5 px-4 bg-primary-dark" @click="checkedAll(!isExitChecked)">
