@@ -1,4 +1,6 @@
 <script setup>
+const emit = defineEmits(['addSuccess']);
+
 const newTodoItem = ref('');
 const sending = ref(false);
 
@@ -13,6 +15,7 @@ const addTodo = async () => {
     });
     if (response.statusCode === 200) {
         newTodoItem.value = '';
+        emit('addSuccess');
     }
     sending.value = false;
 };
