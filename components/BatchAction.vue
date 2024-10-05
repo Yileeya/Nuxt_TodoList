@@ -1,4 +1,6 @@
 <script setup>
+import { handleErrorResponse } from '@/utils/responseHandler.js';
+
 const props = defineProps({
     ids: {
         type: Array,
@@ -6,7 +8,7 @@ const props = defineProps({
         default: () => []
     }
 });
-const emit = defineEmits(['refresh']);
+const emit = defineEmits(['refresh', 'editChanged']);
 
 const selectValue = ref(1);
 const selectList = [
@@ -27,42 +29,45 @@ const selectList = [
     }
 ];
 
-const sending = ref(false);
 const submit = async () => {
-    const match = selectList.find((select) => select.id === selectValue.value);
-    sending.value = true;
+    emit('editChanged', -1); //-1代表全部禁用
+    const match = selectList.find(select => select.id === selectValue.value);
     await match.action();
-    sending.value = false;
+    emit('editChanged', '');
 };
 
 const batchCompleted = async (completed = true) => {
-    const response = await $fetch(`/api/todo/batchCompleted`, {
-        method: 'POST',
-        body: {
-            ids: props.ids,
-            completed: completed
+    try {
+        const response = await $fetch(`/api/todo/batchCompleted`, {
+            method: 'POST',
+            body: {
+                ids: props.ids,
+                completed: completed
+            }
+        });
+        if (response.statusCode === 200) {
+            useNuxtApp().$toast.success(response.message);
+            emit('refresh');
         }
-    });
-    if (response.statusCode === 200) {
-        alert(`${response.message}`);
-        emit('refresh');
-    } else {
-        alert('失敗');
+    } catch (err) {
+        handleErrorResponse(err);
     }
 };
 
 const batchDelete = async () => {
-    const response = await $fetch(`/api/todo/batchDelete`, {
-        method: 'DELETE',
-        body: {
-            ids: props.ids
+    try {
+        const response = await $fetch(`/api/todo/batchDelete`, {
+            method: 'DELETE',
+            body: {
+                ids: props.ids
+            }
+        });
+        if (response.statusCode === 200) {
+            useNuxtApp().$toast.success(response.message);
+            emit('refresh');
         }
-    });
-    if (response.statusCode === 200) {
-        alert(`${response.message}`);
-        emit('refresh');
-    } else {
-        alert('失敗');
+    } catch (err) {
+        handleErrorResponse(err);
     }
 };
 </script>
