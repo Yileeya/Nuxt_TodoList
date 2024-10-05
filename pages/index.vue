@@ -6,7 +6,7 @@ const fetchAllTodo = async () => {
         method: 'GET'
     });
     if (response.statusCode === 200) {
-        todos.value = response.data.map((todo) => {
+        todos.value = response.data.map(todo => {
             return {
                 ...todo,
                 isCheck: false
@@ -14,38 +14,39 @@ const fetchAllTodo = async () => {
         });
     } else {
         todos.value = [];
+        useNuxtApp().$toast.error('獲取待辦事項錯誤。');
     }
 };
 fetchAllTodo();
 
 // 編輯項目
-const isEditId = ref('');
+const isEditId = ref(''); // -1代表全部禁用
 const itemEdit = (id = '') => {
     isEditId.value = id;
 };
 
 // 項目資料異動
 const todoRemove = (id = '') => {
-    todos.value = todos.value.filter((todo) => todo._id !== id);
+    todos.value = todos.value.filter(todo => todo._id !== id);
 };
 const todoUpdate = (id = '', newItem = {}) => {
-    const matchTodoIndex = todos.value.findIndex((todo) => todo._id === id);
+    const matchTodoIndex = todos.value.findIndex(todo => todo._id === id);
     if (matchTodoIndex === -1) return;
     todos.value[matchTodoIndex] = { ...todos.value[matchTodoIndex], ...newItem };
 };
 
 // 項目勾選邏輯處理
 const isExitChecked = computed(() => {
-    const haveChecked = todos.value.findIndex((todo) => todo.isCheck);
+    const haveChecked = todos.value.findIndex(todo => todo.isCheck);
     return haveChecked !== -1;
 });
 const checkedAll = (checked = true) => {
-    todos.value.forEach((todo) => {
+    todos.value.forEach(todo => {
         todo.isCheck = checked;
     });
 };
 const checkedIds = computed(() => {
-    return todos.value.filter(todo => todo.isCheck).map(item => item._id)
+    return todos.value.filter(todo => todo.isCheck).map(item => item._id);
 });
 </script>
 
@@ -57,7 +58,7 @@ const checkedIds = computed(() => {
             <ElementButton class="py-1.5 px-4 bg-primary-dark" @click="checkedAll(!isExitChecked)">
                 {{ isExitChecked ? '取消全選' : '全選' }}
             </ElementButton>
-            <BatchAction v-if="isExitChecked" :ids="checkedIds" @refresh="fetchAllTodo()" />
+            <BatchAction v-if="isExitChecked" :ids="checkedIds" @refresh="fetchAllTodo()" @edit-changed="itemEdit" />
         </div>
         <TodoItem
             v-for="todo in todos"
